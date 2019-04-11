@@ -6,7 +6,7 @@
   (.indexOf alphabet c))
 
 (defn- rotate-list [lst n]
-  (let [n (rem n 26)]
+  (let [n (rem n (count lst))]
     (concat (drop n lst) (take n lst))))
 
 (def rotateAlphabet 
@@ -38,15 +38,15 @@
     (if (> n (count s))
       s
       (let [t (take n s)]
-        (if (= (apply str (take (count s) (apply concat (repeat t)))) s)
+        (if (= (apply str (take (count s) (cycle t))) s)
           (apply str t)
           (recur (inc n)))))))
 
 (defn encode [secret message]
-  (apply str (map encode-letter (apply concat (repeat secret)) message)))
+  (apply str (map encode-letter (cycle secret) message)))
 
 (defn decode [secret message]
-  (apply str (map decode-letter (apply concat (repeat secret)) message)))
+  (apply str (map decode-letter (cycle secret) message)))
 
 (defn decipher [cipher message]
   (find-repeating-str (apply str (map decipher-letter cipher message))))
